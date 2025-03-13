@@ -3,6 +3,8 @@ package com.uae.dubai.ekconent.todo;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -24,17 +26,19 @@ public class TodoController {
     }
    @RequestMapping("list-todos")
    public String listAllTodos(ModelMap model) {
-    List<Todo> todos = todoService.findmyUserName("ashok");
+	String userName= getLoggedInUsername(model);
+    List<Todo> todos = todoService.findmyUserName(userName);
     model.addAttribute("todos",todos);   
     return "listTodos"; 
    }
    
    @RequestMapping(value = "add-todo", method = RequestMethod.GET)
    public String ShowNewTodoPage(ModelMap model) {
-	   Todo todo = new Todo(0,(String)model.get("name"),"",LocalDate.now().plusYears(1),false);
+	   Todo todo = new Todo(0,getLoggedInUsername(model),"",LocalDate.now().plusYears(1),false);
 	   model.put("todo",todo);
     return "todo"; 
    }
+
    
    @RequestMapping(value = "add-todo", method = RequestMethod.POST)
    public String addNewTodoPage(ModelMap model,@Valid Todo todo, BindingResult result) {
@@ -42,7 +46,7 @@ public class TodoController {
 		   return "todo"; 
 	   }
 	   System.out.println("in add todo--------------" +todo.toString());
-	 todoService.addTodo((String)model.get("name"),todo.getDescription(),todo.getTargetDate(),true);
+	 todoService.addTodo(getLoggedInUsername(model),todo.getDescription(),todo.getTargetDate(),true);
     return "redirect:list-todos"; 
    }
    
@@ -67,10 +71,16 @@ public class TodoController {
 		   return "todo"; 
 	   }
 	   System.out.println("in update todo--------------" +todo.toString());
-	   String username = (String)model.get("name");
+	   String username = getLoggedInUsername(model);
 	   todo.setUsername(username);
 	 todoService.UpdateTodo(todo);
     return "redirect:list-todos"; 
    }
+   
+   private String getLoggedInUsername(ModelMap model) {
+	   Authentication authencation = SecurityContextHolder.getContext().getAuthentication();
+   	   String getname = authencation.getName();
+		return getname;
+	}
    
 }

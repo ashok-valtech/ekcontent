@@ -26,4 +26,5 @@
             </c:forEach>
         </tbody>
     </table>
+    <a href = "add-todo" class = "btn btn-success">Add Todo</a>
    <%@include file ="common/footer.jsp" %>

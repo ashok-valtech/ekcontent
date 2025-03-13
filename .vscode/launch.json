@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-EkconentDemoApplication<ekconent>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.uae.dubai.ekconent.EkconentDemoApplication",
+            "projectName": "ekconent",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
